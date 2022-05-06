@@ -12,8 +12,3 @@ ToyProject - 나만의 노트 만들기 with Django
  - 메모하는 글에 대한 CRUD
  - 카테고리 생성 및 지정
  - 카테고리별 글 보기
-
-## PatchNote
-|변경 일자|Commit|설명|
-|:------:|:----:|:--:|
-| 22.05.06 | MyNote Initialize | 기본 틀 구성(Models, Views, urls) |
