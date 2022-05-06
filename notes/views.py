@@ -5,7 +5,6 @@ from .models import Category, Category2, Note
 
 """ 작성해야할 views
     인덱스, 로그인/로그아웃, 메인, 카테고리1,2차, 생성/읽기/수정/삭제(CRUD) 페이지
-    탬플릿 필요 : 인덱스, 로그인/로그아웃, 메인, 카테고리, CRUD 
     # path('main/', main_page, name='main_page'),
     # path('category/', Pcategory_page, name='Pcategory_page'),
     # path('category/category2/', Scategory_page, name='Scategory_page'),
@@ -16,6 +15,7 @@ from .models import Category, Category2, Note
     # path('', index, name='index'),
     # path('login/', login, name='login'),
     # path('logout/', logout, name='logout'),
+    # path('tagsearch/',Tsearch_page, name='Tsearch_page')
 """
 
 def index(request): # 뭐하는 페이지인지 간단한 설명, 로그인으로 넘어갈 수 있는 구조
@@ -85,3 +85,20 @@ def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이�
         pass
     else:
         pass
+
+@login_required
+def Tsearch_page(request, id): # 태그별 보기 : 작성된 글 중에서 태그에 해당되는 글 리스트 출력
+    if request.method=='GET':
+        pass
+    else:
+        pass
+
+
+""" Patch Note
+    22.05.06/ Initialize, 기초 틀 구성
+"""
+
+""" 해야할 일
+    탬플릿 구성
+    개별 코드 작성
+"""
