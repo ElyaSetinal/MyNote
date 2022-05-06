@@ -34,4 +34,4 @@ class Note(models.Model):
     # 참조링크 : CharField의 확장, 편리한 유효성 검사를 URLField를 사용. 반드시 필요한 항목은 아님
     ref_link = models.URLField(verbose_name='참조링크', max_length=300, null=True, blank=True)
     # 태그 : 태그를 통하여 특정 태그의 글 만 읽을 수 있도록 설정
-    HTag = models.CharField(verbose_name='태그', max_length=10, null=True, blank=True)
+    htag = models.CharField(verbose_name='태그', max_length=10, null=True, blank=True)
