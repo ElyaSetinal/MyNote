@@ -7,17 +7,35 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Category(models.Model): # 상위 카테고리
+    class Meta: # 클래스의 이름을 지정
+        verbose_name = '상위 카테고리'
+        verbose_name_plural = '상위 카테고리'
+
     # 상위 카테고리 이름 지정
-    cate_name = models.CharField(verbose_name='카테고리', max_length=10)
+    cate_name = models.CharField(verbose_name='카테고리', max_length=10, unique=True)
+
+    def __str__(self): # 클래스의 정보를 name으로 호출하는 함수
+        return f'{self.cate_name}'
 
 class Category2(models.Model): # 하위 카테고리
+    class Meta: # 클래스의 이름을 지정
+        verbose_name = '하위 카테고리'
+        verbose_name_plural = '하위 카테고리'
+
     # 상위 카테고리 확인
     P_cate_name = models.ForeignKey(Category, verbose_name='상위 카테고리', on_delete=models.CASCADE, related_name='Cate2_Parents_name')
     # 하위 카테고리 이름 지정
-    cate2_name = models.CharField(verbose_name='하위 카테고리', max_length=10, null=True, blank=True)
+    cate2_name = models.CharField(verbose_name='하위 카테고리', max_length=10, null=True, blank=True, unique=True)
+
+    def __str__(self): # 클래스의 정보를 name으로 호출하는 함수
+        return f'{self.cate2_name}'
 
 class Note(models.Model):
     # 노트에 들어갈 내용들 - 제목, 내용, 작성시간, 작성자, 참조 링크, 카테고리
+
+    class Meta: # 클래스의 이름을 지정
+        verbose_name = '노트'
+        verbose_name_plural = '노트'
 
     # 노트 카테고리 : 노트에 지정될 카테고리 항목, 2차 카테고리에 연결
     categories = models.ForeignKey(Category2, verbose_name='카테고리', on_delete=models.CASCADE, related_name='Note_Category_name')
@@ -33,5 +51,7 @@ class Note(models.Model):
     created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Note_Created_User')
     # 참조링크 : CharField의 확장, 편리한 유효성 검사를 URLField를 사용. 반드시 필요한 항목은 아님
     ref_link = models.URLField(verbose_name='참조링크', max_length=300, null=True, blank=True)
+
+class Tagsave(models.Model):
     # 태그 : 태그를 통하여 특정 태그의 글 만 읽을 수 있도록 설정
     htag = models.CharField(verbose_name='태그', max_length=10, null=True, blank=True)

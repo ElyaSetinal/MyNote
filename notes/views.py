@@ -19,12 +19,21 @@ from .models import Category, Category2, Note
 """
 
 def index(request): # 뭐하는 페이지인지 간단한 설명, 로그인으로 넘어갈 수 있는 구조
+    # 로그인 유도 기본 화면 출력
+    # 데이터 유효성 검사 - 로그인 상태인지 확인
+    # 비지니스 로직 - 비 로그인 상태/ 로그인 상태 구분
+    # 응답 - 비로그인: 인덱스 페이지 / 로그인: 노트 메인페이지
     if request.method=='GET':
         pass
     else:
         pass
 
 def login(request): # 로그인 페이지
+    # GET: 로그인 화면
+    # POST 
+    # 데이터 유효성 검사, django에서 지원하는 forms 사용
+    # 비지니스 로직 - 폼이 맞으면, 로그인 시행
+    # 응답 - 노트 메인페이지로 이동
     if request.method=='GET':
         pass
     else:
@@ -32,6 +41,10 @@ def login(request): # 로그인 페이지
 
 @login_required
 def logout(request): # 로그아웃 페이지, 일정시간 후 자동으로 인덱스 페이지로 넘기기/html의 메타태그 사용
+    # 로그아웃
+    # 데이터 유효성 검사 - 로그인 상태인지 확인
+    # 비지니스 로직 - 사용자 로그아웃
+    # 응답 - 인덱스 페이지
     if request.method=='GET':
         pass
     else:
@@ -39,20 +52,32 @@ def logout(request): # 로그아웃 페이지, 일정시간 후 자동으로 인
 
 @login_required
 def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 전체글, 부모 카테고리 지정 링크
+    # 전체글 게시할 메인 페이지
+    # 데이터 유효성 검사 - 로그인 된 유저 데이터 확인
+    # 비지니스 로직 - 로그인 된 유저가 작성한 게시글 불러오기 및 카테고리 불러오기
+    # 응답 - 작성한 게시글 및 상위 카테고리 표시, 최신글 순서
     if request.method=='GET':
         pass
     else:
         pass
 
 @login_required
-def Pcategory_page(request): # 부모 카테고리 : 부모 카테고리에 포함된 모든 글 및 자식 카테고리 지정 링크
+def Pcategory_page(request): # 상위 카테고리 : 상위 카테고리에 포함된 모든 글 및 자식 카테고리 지정 링크
+    # 상위 카테고리 표시 페이지
+    # 데이터 유효성 검사 - 로그인 유저 데이터 + 선택한 상위 카테고리 명 확인
+    # 비지니스 로직 - 해당 카테고리의 로그인 유저 작성글 불러오기
+    # 응답 - 작성한 게시글 및 하위 카테고리 표시
     if request.method=='GET':
         pass
     else:
         pass
 
 @login_required
-def Scategory_page(request): # 자식 카테고리 : 자식 카테고리에 포함된 모든 글 링크
+def Scategory_page(request): # 하위 카테고리 : 하위 카테고리에 포함된 모든 글 링크
+    # 하위 카테고리 표시 페이지
+    # 데이터 유효성 검사 - 로그인 유저 데이터 + 선택한 하위 카테고리 명 확인
+    # 비지니스 로직 - 해당 카테고리의 로그인 유저 작성글 불러오기
+    # 응답 - 작성한 게시글 표시
     if request.method=='GET':
         pass
     else:
@@ -60,6 +85,13 @@ def Scategory_page(request): # 자식 카테고리 : 자식 카테고리에 포�
 
 @login_required
 def create_page(request): # 글 쓰기 : 새로운 글 쓰기
+    # GET: 글 작성 페이지 render
+    # POST 
+    # 데이터 유효성 검사  
+    #  반드시 들어가야할 몇가지 항목이 작성되어 있는가, is_valid를 사용 // 카테고리, 제목, 본문, 참조링크, 태그 읽어오기. cleaned_data
+    #  태그 작성시 ,(콤마)로 구분짓고, 개별 단위로 생성(split)
+    # 비지니스 로직 - 읽어온 항목들을 DB에 생성하기
+    # 응답 - main-page로 redirect
     if request.method=='GET':
         pass
     else:
@@ -67,6 +99,9 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
 
 @login_required
 def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 링크
+    # 데이터 유효성 검사 - 선택한 게시글 아이디 확인 및 읽어오기
+    # 비지니스 로직 - 해당 아이디의 카테고리, 제목, 본문, 참조링크, 태그등을 html에 전달
+    # 응답 - 전달된 데이터로 render
     if request.method=='GET':
         pass
     else:
@@ -74,6 +109,11 @@ def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 �
 
 @login_required
 def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
+    # GET : 기존 데이터 표기, render
+    # POST
+    # 데이터 유효성 검사 - 수정하는 게시글 내용 읽어오기
+    # 비지니스 로직 - 신규 데이터를 해당되는 모델에 입력하고, 저장
+    # 응답 - 해당되는 detail 페이지로 redirect
     if request.method=='GET':
         pass
     else:
@@ -81,6 +121,11 @@ def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
 
 @login_required
 def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이지, Hard-Delete
+    # GET : 삭제할 데이터 표기
+    # POST
+    # 데이터 유효성 검사 - 삭제 요청한 게시글 아이디 확인
+    # 비지니스 로직 - 데이터 삭제 요청 재 확인 후 delete
+    # 응답 - main-page로 redirect
     if request.method=='GET':
         pass
     else:
@@ -88,6 +133,11 @@ def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이�
 
 @login_required
 def Tsearch_page(request, id): # 태그별 보기 : 작성된 글 중에서 태그에 해당되는 글 리스트 출력
+    # GET : 검색창만 열기
+    # POST
+    # 데이터 유효성 검사 - 검색할 태그 확인하기
+    # 비지니스 로직 - 태그에 해당되는 게시글 필터링
+    # 응답 - 필터된 게시글 일괄 표기
     if request.method=='GET':
         pass
     else:
@@ -96,6 +146,7 @@ def Tsearch_page(request, id): # 태그별 보기 : 작성된 글 중에서 태�
 
 """ Patch Note
     22.05.06/ Initialize, 기초 틀 구성
+    22.05.09/ Logic Memo 추가, Models-Tag 수정, Admin 화면 구성
 """
 
 """ 해야할 일
