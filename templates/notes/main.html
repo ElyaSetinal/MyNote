@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}홈{% endblock %} || MyNote</title>
+
+    <div>
+        
+    </div>
+    <div>
+        {% block content %}
+        <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
+        {% endblock %}
+    </div>

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Category, Category2, Note
 
@@ -23,32 +25,50 @@ def index(request): # 뭐하는 페이지인지 간단한 설명, 로그인으�
     # 데이터 유효성 검사 - 로그인 상태인지 확인
     # 비지니스 로직 - 비 로그인 상태/ 로그인 상태 구분
     # 응답 - 비로그인: 인덱스 페이지 / 로그인: 노트 메인페이지
-    if request.method=='GET':
-        pass
+    if not request.session.session_key:
+        #print('로그인이 되어 있지 않습니다.')
+        return render(request, 'index.html',{'form':AuthenticationForm(),})
     else:
-        pass
+        #print(f'{request.user.username}님이 로그인 되어 있습니다.')
+        return redirect('notes:main_page')
 
-def login(request): # 로그인 페이지
+def userlogin(request): # 로그인 페이지
+    '''
+    Django에서 기본으로 제공하는 login과 겹치므로, userlogin으로 이름 변경(22.05.11)
+    '''
     # GET: 로그인 화면
     # POST 
     # 데이터 유효성 검사, django에서 지원하는 forms 사용
     # 비지니스 로직 - 폼이 맞으면, 로그인 시행
     # 응답 - 노트 메인페이지로 이동
     if request.method=='GET':
-        pass
+        return render(request, 'login.html', {'form':AuthenticationForm()})
     else:
-        pass
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            #비지니스 로직 처리 - 로그인 처리
+            login(request, form.user_cache)
+            #응답
+            return redirect('notes:main_page')
+        else:
+            #비지니스 로직 처리 - 로그인 실패, 로그인 화면 재 연결
+            #응답 
+            return render(request, 'login.html', {'form':form})
 
 @login_required
-def logout(request): # 로그아웃 페이지, 일정시간 후 자동으로 인덱스 페이지로 넘기기/html의 메타태그 사용
+def userlogout(request): # 로그아웃 페이지, 일정시간 후 자동으로 인덱스 페이지로 넘기기/html의 메타태그 사용
+    '''
+    Django에서 기본으로 제공하는 logout과 겹치므로, userlogout으로 이름 변경(22.05.11)
+    '''
     # 로그아웃
     # 데이터 유효성 검사 - 로그인 상태인지 확인
     # 비지니스 로직 - 사용자 로그아웃
     # 응답 - 인덱스 페이지
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    if request.user.is_authenticated:
+        # 비지니스 로직 - 로그아웃 처리
+        logout(request)
+    #응답
+    return redirect('index')
 
 @login_required
 def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 전체글, 부모 카테고리 지정 링크
@@ -57,9 +77,9 @@ def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 �
     # 비지니스 로직 - 로그인 된 유저가 작성한 게시글 불러오기 및 카테고리 불러오기
     # 응답 - 작성한 게시글 및 상위 카테고리 표시, 최신글 순서
     if request.method=='GET':
-        pass
+        return render(request, 'notes/main.html')
     else:
-        pass
+        return render(request, 'notes/main.html')
 
 @login_required
 def Pcategory_page(request): # 상위 카테고리 : 상위 카테고리에 포함된 모든 글 및 자식 카테고리 지정 링크

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} || MyNote</title>
+</head>
+<body>
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div>
+        {% if request.user.is_authenticated %}
+            <span>
+            <li><a href="">홈</a></li>
+            <li><a href="">새로만들기</a></li>
+            <li><a href="">유저정보</a></li>
+            </span>
+        {% endif %}
+    </div>
+</body>
+</html>
