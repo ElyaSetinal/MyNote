@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import main_page, Pcategory_page, Scategory_page, create_page, detail_page, edit_page, delete_page, Tsearch_page
+from .views import main_page, Pcategory_page, Scategory_page, create_page, detail_page, edit_page, delete_page, tsearch_page
 
 app_name = 'notes'
 
@@ -23,5 +23,5 @@ urlpatterns = [
     path('<int:id>/', detail_page, name='detail_page'),
     path('<int:id>/edit/', edit_page, name='edit_page'),
     path('<int:id>/delete/', delete_page, name='delete_page'),
-    path('tagsearch/',Tsearch_page, name='Tsearch_page')
+    path('tagsearch/',tsearch_page, name='Tsearch_page')
 ]
