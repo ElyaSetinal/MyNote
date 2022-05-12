@@ -11,8 +11,29 @@
     </div>
     <div>
         {% if request.user.is_authenticated %}
+        {% if note_list %}
+        <div class="Pagination">
+            {% if note_list.has_previous %}
+                <a href="?page=1">First</a>
+                <a href="?page={{note_list.previous_page_number}}">Previous</a>
+            {% endif %}
+
+            <span>{{ note_list.number }} of {{ note_list.paginator.num_pages }}</span>
+
+            {% if note_list.has_next %}
+                <a href="?page={{ note_list.next_page_number }}">Next</a>
+                <a href="?page={{ note_list.paginator.num_pages }}">Last</a>
+            {% endif %}
+        {% endif %}
+        {% endif %}
+        </div>
+        </span>
+    </div>
+    <div>
+        {% if request.user.is_authenticated %}
+        <br>
             <span>
-            <li><a href="">홈</a></li>
+            <li><a href="{% url 'notes:main_page' %}">홈</a></li>
             <li><a href="">새로만들기</a></li>
             <li><a href="">유저정보</a></li>
             </span>

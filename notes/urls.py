@@ -17,8 +17,8 @@ app_name = 'notes'
 
 urlpatterns = [
     path('main/', main_page, name='main_page'),
-    path('category/', Pcategory_page, name='Pcategory_page'),
-    path('category/category2/', Scategory_page, name='Scategory_page'),
+    path('category/<str:cate_name>', Pcategory_page, name='Pcategory_page'),
+    path('category/category2/<str:cate2_name>', Scategory_page, name='Scategory_page'),
     path('new/', create_page, name='create_page'),
     path('<int:id>/', detail_page, name='detail_page'),
     path('<int:id>/edit/', edit_page, name='edit_page'),

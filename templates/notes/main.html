@@ -7,5 +7,23 @@
     <div>
         {% block content %}
         <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
+        <br>홈 화면입니다.
+        <br>
+        <br>
+        <div class="Category_List">
+            [카테고리 목록]
+            {% for object in ctgy_list %}
+            <li><a href="{% url 'notes:Pcategory_page' object.cate_name %}">{{ object.cate_name }}</a></li>
+            {% endfor %}
+        </div>
+            <br>
+        <div class="Note_List">
+            [전체글 목록]
+            {% for object in note_list %}
+            <li><a href="">{{ object.title|truncatechars:10 }}</a> - {{ object.modified_at }}</li>
+            {% endfor %}
+        </div>
+        <br>
+        </span>
         {% endblock %}
     </div>

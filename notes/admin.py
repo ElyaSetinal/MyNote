@@ -24,7 +24,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ['categories', 'title','created_by','created_at',]
+    list_display = ['title','categories','created_by','created_at',]
     list_filter = ['categories', 'created_by',]
     search_field = ['categories', 'created_by',]
     search_help_text = '카테고리 검색 혹은 작성자 검색'

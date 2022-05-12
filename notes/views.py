@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.paginator import Paginator
 
 from .models import Category, Category2, Note
 
@@ -76,32 +77,68 @@ def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 �
     # 데이터 유효성 검사 - 로그인 된 유저 데이터 확인
     # 비지니스 로직 - 로그인 된 유저가 작성한 게시글 불러오기 및 카테고리 불러오기
     # 응답 - 작성한 게시글 및 상위 카테고리 표시, 최신글 순서
-    if request.method=='GET':
-        return render(request, 'notes/main.html')
-    else:
-        return render(request, 'notes/main.html')
+    current_user = request.user
+
+    note_list = Note.objects.filter(created_by = current_user).order_by('-created_at')
+    ctgy_list = Category.objects.all().order_by('id')
+
+    paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
+    page_num = request.GET.get('page') # 페이지 번호 가져오기
+    note_list_index = paging.get_page(page_num) # 페이지 인덱싱
+    context = {
+        'note_list':note_list_index,
+        'ctgy_list':ctgy_list,
+        }
+    return render(request, 'notes/main.html', context)
 
 @login_required
-def Pcategory_page(request): # 상위 카테고리 : 상위 카테고리에 포함된 모든 글 및 자식 카테고리 지정 링크
+def Pcategory_page(request, cate_name): # 상위 카테고리 : 상위 카테고리에 포함된 모든 글 및 자식 카테고리 지정 링크
     # 상위 카테고리 표시 페이지
     # 데이터 유효성 검사 - 로그인 유저 데이터 + 선택한 상위 카테고리 명 확인
     # 비지니스 로직 - 해당 카테고리의 로그인 유저 작성글 불러오기
     # 응답 - 작성한 게시글 및 하위 카테고리 표시
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    current_user = request.user
+    current_category = Category.objects.get(cate_name = cate_name)
+    # print(current_user)
+    # print(current_category)
+
+    note_list = Note.objects.filter(created_by = current_user).filter(categories__P_cate_name = current_category).order_by('-created_at')
+    ctgy2_list = Category2.objects.filter(P_cate_name = current_category).order_by('id')
+    # print(note_list)
+    # print(ctgy2_list)
+    paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
+    page_num = request.GET.get('page') # 페이지 번호 가져오기
+    note_list_index = paging.get_page(page_num) # 페이지 인덱싱
+
+    context = {
+        'ctgy_now':current_category,
+        'note_list':note_list_index,
+        'ctgy_list':ctgy2_list,
+    }
+
+    return render(request, 'notes/category.html', context)
 
 @login_required
-def Scategory_page(request): # 하위 카테고리 : 하위 카테고리에 포함된 모든 글 링크
+def Scategory_page(request, cate2_name): # 하위 카테고리 : 하위 카테고리에 포함된 모든 글 링크
     # 하위 카테고리 표시 페이지
     # 데이터 유효성 검사 - 로그인 유저 데이터 + 선택한 하위 카테고리 명 확인
     # 비지니스 로직 - 해당 카테고리의 로그인 유저 작성글 불러오기
     # 응답 - 작성한 게시글 표시
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    current_user = request.user
+    current_category = Category2.objects.get(cate2_name = cate2_name)
+
+    note_list = Note.objects.filter(created_by = current_user).filter(categories = current_category).order_by('-created_at')
+
+    paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
+    page_num = request.GET.get('page') # 페이지 번호 가져오기
+    note_list_index = paging.get_page(page_num) # 페이지 인덱싱
+
+    context = {
+        'ctgy_now':current_category,
+        'note_list':note_list_index,
+    }
+
+    return render(request, 'notes/category.html', context)
 
 @login_required
 def create_page(request): # 글 쓰기 : 새로운 글 쓰기
