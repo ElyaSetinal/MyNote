@@ -19,6 +19,7 @@
             <br>
         <div class="Note_List">
             [전체글 목록]
+            <br> 게시글은 한 페이지에 20개씩 표시됩니다.
             {% for object in note_list %}
             <li><a href="">{{ object.title|truncatechars:10 }}</a> - {{ object.modified_at }}</li>
             {% endfor %}
