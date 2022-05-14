@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import main_page, Pcategory_page, Scategory_page, create_page, detail_page, edit_page, delete_page, tsearch_page
-
+from .views import main_page, Pcategory_page, Scategory_page, create_page, detail_page, edit_page, delete_page
+from .views import TagCloudTV, TaggedObjectLV
 app_name = 'notes'
 
 """
@@ -23,5 +23,7 @@ urlpatterns = [
     path('<int:id>/', detail_page, name='detail_page'),
     path('<int:id>/edit/', edit_page, name='edit_page'),
     path('<int:id>/delete/', delete_page, name='delete_page'),
-    path('tagsearch/',tsearch_page, name='Tsearch_page')
+    #Taggit 모듈 사용, Tag 페이지 별도 구성
+    path('tag/', TagCloudTV.as_view(), name='tag_cloud'),
+    path('tag/<str:tag>',TaggedObjectLV.as_view(), name='tagged_object_list'),
 ]

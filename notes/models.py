@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from taggit.managers import TaggableManager
 
 #모델로써 제작 되어야 할 것들 : 노트본문, 카테고리 항목, 하위 카테고리 항목
 
@@ -51,7 +52,7 @@ class Note(models.Model):
     created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Note_Created_User')
     # 참조링크 : CharField의 확장, 편리한 유효성 검사를 URLField를 사용. 반드시 필요한 항목은 아님
     ref_link = models.URLField(verbose_name='참조링크', max_length=300, null=True, blank=True)
+    # 태그 : 외부 모듈인 Taggit 사용하여 추가, 태그별 검색을 할 수 있도록 추가
+    tags = TaggableManager(verbose_name="태그", help_text="콤마(,)로 구분합니다.", blank=True)
 
-class Tagsave(models.Model):
-    # 태그 : 태그를 통하여 특정 태그의 글 만 읽을 수 있도록 설정
-    htag = models.CharField(verbose_name='태그', max_length=10, null=True, blank=True)
+# Tagsave 비활성화, Taggit 사용

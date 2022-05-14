@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}상위 카테고리{% endblock %} || MyNote</title>
+{% block title %}카테고리{% endblock %} || MyNote</title>
+{# 카테고리 관리용 폼도 같이 쓰자 #}
 
-
-    <div>
-        {% block content %}
-        <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
-        <br>
+<div>
+    {% block content %}
+    <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
+    <br>
+    <div class="List">
+        {% if ctgy_now %}
         <div class="Category_Now">
                 선택한 카테고리 : {{ctgy_now}}
+                <br><a href="javascript:window.history.back()">뒤로 돌아가기</a>
         </div>
+        {% endif %}
         <br>
         {% if ctgy_list %}
         <div class="Category2_List">
@@ -19,6 +23,7 @@
         {% endif %}
         </div>
         <br>
+        {% if note_list %}
         <div class="Note_List">
             [해당 카테고리 글 목록]
             <br> 게시글은 한 페이지에 20개씩 표시됩니다.
@@ -26,5 +31,7 @@
                 <li><a href="">{{ object.title|truncatechars:10 }}</a> - {{ object.modified_at }}</li>
             {% endfor %}
         </div>
-        {% endblock %}
+        {% endif %}
     </div>
+    {% endblock %}
+</div>

@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
+from django.views.generic import ListView, TemplateView
 
 from .models import Category, Category2, Note
 
@@ -188,17 +189,22 @@ def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이�
     else:
         pass
 
-@login_required
-def tsearch_page(request, id): # 태그별 보기 : 작성된 글 중에서 태그에 해당되는 글 리스트 출력
-    # GET : 검색창만 열기
-    # POST
-    # 데이터 유효성 검사 - 검색할 태그 확인하기
-    # 비지니스 로직 - 태그에 해당되는 게시글 필터링
-    # 응답 - 필터된 게시글 일괄 표기
-    if request.method=='GET':
-        pass
-    else:
-        pass
+#tsearch_page, Taggit 모듈 사용으로 삭제(22.05.14)
+#Taggit 제공 view 사용으로 변경(22.05.14)
+class TagCloudTV(TemplateView):
+    template_name: "taggit/tagsearch.html"
+
+class TaggedObjectLV(ListView):
+    template_name: "taggit/tagresult.html"
+    model: Note
+
+    def get_queryset(self):
+        return Note.objects.filter(tags__name=self.kwargs.get('tag'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tagname'] = self.kwargs['tag']
+        return context
 
 @login_required
 def ctgr_view(request): # 생성된 카테고리 보기(22.05.12 추가)
@@ -240,6 +246,7 @@ def ctgr_delete(request, id): # 카테고리 삭제(22.05.12 추가)
     22.05.11/ login, logout. index 구성
     22.05.12/ main_page, category_page 구성, admin, url 수정
     22.05.12/ 카테고리 관리 페이지 별도 생성 구조 작성
+    22.05.14/ 태그 기능 추가 구성, 외부 모듈 사용
 """
 
 """ 해야할 일
