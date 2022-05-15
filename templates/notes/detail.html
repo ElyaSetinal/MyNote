@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} Detail {% endblock %}
+
+{% block content %}
+    {# 꾸미기 필요 #}
+    detail 화면입니다.<br>
+    <h1>제목 : {{ note.title }}<br></h1>
+    지정 카테고리 : {{ note.categories }}<br>
+    참고 링크 : {{ note.ref_link }}<br>
+    작성자 : {{ note.created_by }}<br>
+    <br>
+    본문 : {{ note.contents }}<br>
+    태그 : {{ note.tags }}<br>
+    <br>
+
+    작성시간 : {{ note.created_at }}<br>
+    수정시간 : {{ note.modified_at }}<br>
+{% endblock %}

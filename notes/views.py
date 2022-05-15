@@ -1,3 +1,4 @@
+from turtle import title
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView
 
 from .models import Category, Category2, Note
+from .forms import NoteCreateForm
 
 """ 작성해야할 views
     인덱스, 로그인/로그아웃, 메인, 카테고리1,2차, 생성/읽기/수정/삭제(CRUD) 페이지
@@ -151,19 +153,39 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
     # 비지니스 로직 - 읽어온 항목들을 DB에 생성하기
     # 응답 - main-page로 redirect
     if request.method=='GET':
-        pass
+        form = NoteCreateForm()
+        context = {'forms':form, }
+        return render(request, 'notes/create.html', context)
     else:
-        pass
+        form = NoteCreateForm(request.POST)
+        if form.is_valid():
+            Note.objects.create(
+                categories = form.cleaned_data['categories'],
+                title = form.cleaned_data['title'],
+                content = form.cleaned_data['contents'],
+                ref_link = form.cleaned_data['ref_link'],
+                tags = form.cleaned_data['tags'], # taggit에 맞추어 수정 필요(22.05.15)
+                created_by = request.user,
+            )
+        else:
+            return redirect('notes:create_page')
+        return redirect('notes:main_page')
+
 
 @login_required
 def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 링크
     # 데이터 유효성 검사 - 선택한 게시글 아이디 확인 및 읽어오기
     # 비지니스 로직 - 해당 아이디의 카테고리, 제목, 본문, 참조링크, 태그등을 html에 전달
     # 응답 - 전달된 데이터로 render
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    try:
+        note = Note.objects.get(id=id)
+    except Note.DoesNotExist:
+        return redirect('notes:main_page')
+    context = {
+        'note':note,
+        }
+    return render(request, 'notes/detail.html', context)
+
 
 @login_required
 def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
@@ -192,10 +214,10 @@ def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이�
 #tsearch_page, Taggit 모듈 사용으로 삭제(22.05.14)
 #Taggit 제공 view 사용으로 변경(22.05.14)
 class TagCloudTV(TemplateView):
-    template_name: "taggit/tagsearch.html"
+    template_name= "taggit/tagsearch.html"
 
 class TaggedObjectLV(ListView):
-    template_name: "taggit/tagresult.html"
+    template_name= "taggit/tagresult.html"
     model: Note
 
     def get_queryset(self):
