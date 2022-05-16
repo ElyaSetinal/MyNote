@@ -24,8 +24,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ['title','categories','created_by','created_at',]
+    list_display = ['title','categories','created_by','created_at','tag_list']
     list_filter = ['categories', 'created_by',]
     search_field = ['categories', 'created_by',]
     search_help_text = '카테고리 검색 혹은 작성자 검색'
     readonly_field = ['created_at', 'modified_at',]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags')
+
+    def tag_list(self, obj):
+        return u", ".join(o.name for o in obj.tags.all())

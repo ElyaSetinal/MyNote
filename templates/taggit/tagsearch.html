@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}taggit_cloud.html{% endblock %}
+
+{% block content %}
+    <h1>Tag Cloud</h1>
+    <br>
+
+    <div class="tag-cloud">
+        {% load taggit_templatetags2_tags %}
+        {% get_tagcloud as tags %}
+        {% for tag in tags %}
+            <a href="{% url 'notes:tagged_object_list' tag.name %}">{{tag.name}}({{tag.num_times}})</a>
+        {% endfor %}
+    </div>
+{% endblock %}

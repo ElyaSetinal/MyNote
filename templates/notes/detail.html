@@ -3,16 +3,45 @@
 
 {% block content %}
     {# 꾸미기 필요 #}
-    detail 화면입니다.<br>
-    <h1>제목 : {{ note.title }}<br></h1>
-    지정 카테고리 : {{ note.categories }}<br>
-    참고 링크 : {{ note.ref_link }}<br>
+    {% if message %}
+        {{message}}
+    {% endif %}
+    <br>
+    <h1>{{ note.title }}<br></h1>
+    카테고리 : {{ note.categories }}<br>
+    {% if not deleteorder%}
+        참고 링크 : {{ note.ref_link }}<br>
+    {% endif %}
     작성자 : {{ note.created_by }}<br>
     <br>
-    본문 : {{ note.contents }}<br>
-    태그 : {{ note.tags }}<br>
-    <br>
+    {% if not deleteorder %}
+        <div>
+        <pre>
+{{ note.contents }}
+        </pre><br> {# 노트의 본문 #}
+        </div>
+        태그
+        <div>
+        {% for tag in note.tags.all %}
+        <a href="{% url 'notes:tagged_object_list' tag.name %}">{{ tag.name }}</a>
+        {% endfor %}
+        </div>
+        <br>
+        <br>
 
-    작성시간 : {{ note.created_at }}<br>
-    수정시간 : {{ note.modified_at }}<br>
+        작성시간 : {{ note.created_at }}<br>
+        수정시간 : {{ note.modified_at }}<br>
+        <br>
+        <br>
+        {% if request.user == note.created_by %}
+            <a href="{% url 'notes:edit_page' note.id %}">수정하기</a>
+            <a href="{% url 'notes:delete_page' note.id %}">삭제하기</a>
+        {% endif %}
+    {% endif %}
+        {% if deleteorder %}
+            <form action="" method="post"> {%csrf_token%}
+                <br><a href="{% url 'notes:detail_page' note.id %}">돌아가기</a>
+                <input type="submit" value="삭제하기">
+            </form>
+        {% endif %}
 {% endblock %}

@@ -1,5 +1,6 @@
 from turtle import title
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -7,7 +8,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView
 
 from .models import Category, Category2, Note
-from .forms import NoteCreateForm
+from .forms import NoteCreateForm, NoteEditForm
 
 """ 작성해야할 views
     인덱스, 로그인/로그아웃, 메인, 카테고리1,2차, 생성/읽기/수정/삭제(CRUD) 페이지
@@ -159,14 +160,16 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
     else:
         form = NoteCreateForm(request.POST)
         if form.is_valid():
-            Note.objects.create(
+            new_note = Note.objects.create(
                 categories = form.cleaned_data['categories'],
                 title = form.cleaned_data['title'],
-                content = form.cleaned_data['contents'],
+                contents = form.cleaned_data['contents'],
                 ref_link = form.cleaned_data['ref_link'],
-                tags = form.cleaned_data['tags'], # taggit에 맞추어 수정 필요(22.05.15)
                 created_by = request.user,
             )
+            f_tags = form.cleaned_data['tags']
+            for f_tag in f_tags:
+                new_note.tags.add(f_tag)
         else:
             return redirect('notes:create_page')
         return redirect('notes:main_page')
@@ -194,10 +197,26 @@ def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
     # 데이터 유효성 검사 - 수정하는 게시글 내용 읽어오기
     # 비지니스 로직 - 신규 데이터를 해당되는 모델에 입력하고, 저장
     # 응답 - 해당되는 detail 페이지로 redirect
+    target = get_object_or_404(Note, id=id, created_by=request.user)
     if request.method=='GET':
-        pass
+        forms = NoteEditForm(instance= target)
+        return render(request, 'notes/create.html', {'forms':forms})
     else:
-        pass
+        forms = NoteEditForm(request.POST)
+        if forms.is_valid():
+            print(request.POST.get('categories'))
+            new_categories = Category2.objects.get(id=request.POST["categories"])
+            new_title = request.POST.get('title')
+            new_contents = request.POST.get('contents')
+            new_ref_link = request.POST.get('ref_link')
+
+            target.categories = new_categories
+            target.title = new_title
+            target.contents = new_contents
+            target.ref_link = new_ref_link
+
+            target.save()
+            return redirect('notes:detail_page', target.id)
 
 @login_required
 def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이지, Hard-Delete
@@ -206,10 +225,24 @@ def delete_page(request, id): # 개별글 삭제 : 작성된 글 삭제 페이�
     # 데이터 유효성 검사 - 삭제 요청한 게시글 아이디 확인
     # 비지니스 로직 - 데이터 삭제 요청 재 확인 후 delete
     # 응답 - main-page로 redirect
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    target = get_object_or_404(Note, id=id)
+    if request.user != target.created_by:
+        warn = messages.warning(request, "권한이 없습니다.")
+        context = {
+            'message': warn,
+            'note': target,
+        }
+        return render(request, 'notes/detail.html', context)
+    
+    if request.method == "GET":
+        context = {
+            'note':target,
+            'deleteorder': 'On'
+        }
+        return render(request, 'notes/detail.html', context)
+    elif request.method == "POST":
+        target.delete()
+        return redirect('notes:main_page')
 
 #tsearch_page, Taggit 모듈 사용으로 삭제(22.05.14)
 #Taggit 제공 view 사용으로 변경(22.05.14)

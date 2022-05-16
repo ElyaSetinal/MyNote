@@ -4,6 +4,7 @@
 '''
 
 from django import forms
+from taggit.forms import TagWidget
 from django.core.exceptions import ValidationError
 
 from .models import Note
@@ -14,5 +15,9 @@ class NoteBaseForm(forms.ModelForm):
         fields = '__all__'
 
 class NoteCreateForm(NoteBaseForm):
+    class Meta(NoteBaseForm.Meta):
+        fields = ['categories', 'title', 'contents', 'ref_link','tags',]
+
+class NoteEditForm(NoteBaseForm):
     class Meta(NoteBaseForm.Meta):
         fields = ['categories', 'title', 'contents', 'ref_link','tags',]

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import main_page, Pcategory_page, Scategory_page, create_page, detail_page, edit_page, delete_page
 from .views import TagCloudTV, TaggedObjectLV
+
 app_name = 'notes'
 
 """
