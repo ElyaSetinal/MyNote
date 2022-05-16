@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView
 
 from .models import Category, Category2, Note
-from .forms import NoteCreateForm, NoteEditForm
+from .forms import NoteCreateForm, NoteEditForm, Ctgr1CreateForm, Ctgr1EditForm, Ctgr2CreateForm, Ctgr2EditForm
 
 """ 작성해야할 views
     인덱스, 로그인/로그아웃, 메인, 카테고리1,2차, 생성/읽기/수정/삭제(CRUD) 페이지
@@ -89,6 +89,7 @@ def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 �
     page_num = request.GET.get('page') # 페이지 번호 가져오기
     note_list_index = paging.get_page(page_num) # 페이지 인덱싱
     context = {
+        'list_view_page':'On',
         'note_page_list':note_list_index,
         'ctgy_list':ctgy_list,
         }
@@ -114,6 +115,7 @@ def Pcategory_page(request, cate_name): # 상위 카테고리 : 상위 카테고
     note_list_index = paging.get_page(page_num) # 페이지 인덱싱
 
     context = {
+        'list_view_page':'On',
         'ctgy_now':current_category,
         'note_page_list':note_list_index,
         'ctgy_list':ctgy2_list,
@@ -137,6 +139,7 @@ def Scategory_page(request, cate2_name): # 하위 카테고리 : 하위 카테�
     note_list_index = paging.get_page(page_num) # 페이지 인덱싱
 
     context = {
+        'list_view_page':'On',
         'ctgy_now':current_category,
         'note_page_list':note_list_index,
     }
@@ -263,34 +266,156 @@ def ctgr_view(request): # 생성된 카테고리 보기(22.05.12 추가)
     # 데이터 유효성 검사 - 로그인 유저 확인, 생성한 카테고리 확인
     # 비지니스 로직 - Category2써서 현재 유저가 생성한 카테고리를 확인
     # 응답 - 카테고리 리스트 표시
-    if request.method=='GET':
-        pass
-    else:
-        pass
+    current_user = request.user
+    ctgy_manage_list = Category.objects.filter(created_by = current_user).order_by('id')
+    ctgy2_manage_list = Category2.objects.filter(created_by = current_user).order_by('id')
+        
+    context = { 
+        'category_manage_order':'On',
+        'ctgy1':ctgy_manage_list, 
+        'ctgy2':ctgy2_manage_list,
+        }
+
+    return render(request, 'notes/category.html', context)
 
 @login_required
-def ctgr_create(request): # 카테고리 생성(22.05.12 추가)
+def ctgr1_create(request): # 카테고리 생성(22.05.12 추가)
     # GET : 재 렌더링
     # POST
     # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인
     # 비지니스 로직 - 상위인지 하위인지 확인하고, 해당 신규 카테고리 생성
     # 응답 - main_page redirect
     if request.method=='GET':
-        pass
+        form = Ctgr1CreateForm()
+        context = {'forms':form, }
+        return render(request, 'notes/create.html', context)
     else:
-        pass
+        form = Ctgr1CreateForm(request.POST)
+        if form.is_valid():
+            Category.objects.create(
+                cate_name = form.cleaned_data['cate_name'],
+                created_by = request.user,
+            )
+        else:
+            return redirect('notes:create_page')
+        return redirect('notes:ct_manage_view')
 
 @login_required
-def ctgr_delete(request, id): # 카테고리 삭제(22.05.12 추가)
+def ctgr1_edit(request, id): # 카테고리 삭제(22.05.12 추가)
+    # GET : 기존 카테고리명 표기
+    # POST
+    # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인, 카테고리 생성자 확인
+    # 비지니스 로직 - 생성자와 로그인 유저가 동일할때, 삭제처리
+    # 응답 - main_page redirect
+    target = get_object_or_404(Category, id=id, created_by=request.user)
+    if request.method=='GET':
+        forms = Ctgr1EditForm(instance= target)
+        return render(request, 'notes/create.html', {'forms':forms})
+    else:
+        forms = Ctgr1EditForm(request.POST)
+        if forms.is_valid():
+            new_categories = request.POST.get('cate_name')
+            target.cate_name = new_categories
+            target.save()
+            return redirect('notes:ct_manage_view')
+
+@login_required
+def ctgr1_delete(request, id): # 카테고리 삭제(22.05.12 추가)
     # GET : 재 렌더링
     # POST
     # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인, 카테고리 생성자 확인
     # 비지니스 로직 - 생성자와 로그인 유저가 동일할때, 삭제처리
     # 응답 - main_page redirect
+    target = get_object_or_404(Category, id=id)
+    if request.user != target.created_by:
+        warn = messages.warning(request, "권한이 없습니다.")
+        context = {
+            'message': warn,
+            'ctgy': target,
+        }
+        return render(request, 'notes/detail.html', context)
+    
+    if request.method == "GET":
+        context = {
+            'ctgy':target,
+            'delete1order': 'On'
+        }
+        return render(request, 'notes/category.html', context)
+    elif request.method == "POST":
+        target.delete()
+        return redirect('notes:ct_manage_view')
+
+@login_required
+def ctgr2_create(request): # 카테고리 생성(22.05.12 추가)
+    # GET : 재 렌더링
+    # POST
+    # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인
+    # 비지니스 로직 - 상위인지 하위인지 확인하고, 해당 신규 카테고리 생성
+    # 응답 - main_page redirect
     if request.method=='GET':
-        pass
+        form = Ctgr2CreateForm()
+        context = {'forms':form, }
+        return render(request, 'notes/create.html', context)
     else:
-        pass
+        form = Ctgr2CreateForm(request.POST)
+        if form.is_valid():
+            Category2.objects.create(
+                P_cate_name = form.cleaned_data['P_cate_name'],
+                cate2_name = form.cleaned_data['cate2_name'],
+                created_by = request.user,
+            )
+        else:
+            return redirect('notes:create_page')
+        return redirect('notes:ct_manage_view')
+
+@login_required
+def ctgr2_edit(request, id): # 카테고리 삭제(22.05.12 추가)
+    # GET : 기존 카테고리명 표기
+    # POST
+    # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인, 카테고리 생성자 확인
+    # 비지니스 로직 - 생성자와 로그인 유저가 동일할때, 삭제처리
+    # 응답 - main_page redirect
+    target = get_object_or_404(Category2, id=id, created_by=request.user)
+    if request.method=='GET':
+        forms = Ctgr2EditForm(instance= target)
+        return render(request, 'notes/create.html', {'forms':forms})
+    else:
+        forms = Ctgr2EditForm(request.POST)
+        if forms.is_valid():
+            new_p_category = request.POST.get('P_cate_name')
+            new_categories = request.POST.get('cate2_name')
+
+            target.P_cate_name = new_p_category
+            target.cate2_name = new_categories
+
+            target.save()
+            return redirect('notes:ct_manage_view')
+
+@login_required
+def ctgr2_delete(request, id): # 카테고리 삭제(22.05.12 추가)
+    # GET : 재 렌더링
+    # POST
+    # 데이터 유효성 검사 - 로그인 유저 확인, 현재 생성된 카테고리 확인, 카테고리 생성자 확인
+    # 비지니스 로직 - 생성자와 로그인 유저가 동일할때, 삭제처리
+    # 응답 - main_page redirect
+    target = get_object_or_404(Category2, id=id)
+    if request.user != target.created_by:
+        warn = messages.warning(request, "권한이 없습니다.")
+        context = {
+            'message': warn,
+            'ctgy': target,
+        }
+        return render(request, 'notes/detail.html', context)
+    
+    if request.method == "GET":
+        context = {
+            'ctgy':target,
+            'delete2order': 'On'
+        }
+        return render(request, 'notes/category.html', context)
+    elif request.method == "POST":
+        target.delete()
+        return redirect('notes:ct_manage_view')
 
 """ Patch Note
     22.05.06/ Initialize, 기초 틀 구성

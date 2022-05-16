@@ -4,11 +4,10 @@
 '''
 
 from django import forms
-from taggit.forms import TagWidget
-from django.core.exceptions import ValidationError
 
-from .models import Note
+from .models import Note, Category, Category2
 
+# 노트
 class NoteBaseForm(forms.ModelForm):
     class Meta:
         model = Note
@@ -21,3 +20,31 @@ class NoteCreateForm(NoteBaseForm):
 class NoteEditForm(NoteBaseForm):
     class Meta(NoteBaseForm.Meta):
         fields = ['categories', 'title', 'contents', 'ref_link','tags',]
+
+# 상위 카테고리
+class Ctgr1BaseForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class Ctgr1CreateForm(Ctgr1BaseForm):
+    class Meta(Ctgr1BaseForm.Meta):
+        fields = ['cate_name',]
+
+class Ctgr1EditForm(Ctgr1BaseForm):
+    class Meta(Ctgr1BaseForm.Meta):
+        fields = ['cate_name',]
+
+# 하위 카테고리
+class Ctgr2BaseForm(forms.ModelForm):
+    class Meta:
+        model = Category2
+        fields = '__all__'
+
+class Ctgr2CreateForm(Ctgr2BaseForm):
+    class Meta(Ctgr2BaseForm.Meta):
+        fields = ['P_cate_name', 'cate2_name',]
+
+class Ctgr2EditForm(Ctgr2BaseForm):
+    class Meta(Ctgr2BaseForm.Meta):
+        fields = ['P_cate_name', 'cate2_name',]

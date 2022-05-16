@@ -1,11 +1,60 @@
 {% extends 'base.html' %}
 {% block title %}카테고리{% endblock %} || MyNote</title>
-{# 카테고리 관리용 폼도 같이 쓰자 #}
 
 <div>
     {% block content %}
     <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
     <br>
+    {% if category_manage_order %}
+    <div class="Management">
+        <br>
+        <h2>상위 카테고리 목록</h2><a href="{% url 'notes:ct1_manage_create' %}">(추가)</a><br>
+        --------------------------------<br>
+        {% for obj in ctgy1%}
+        {{obj.cate_name}}
+        ( <a href="{% url 'notes:ct1_manage_edit' obj.id %}">수정</a>
+        <a href="{% url 'notes:ct1_manage_del' obj.id %}"> 삭제</a> )<br>
+        {% endfor %}
+        <br>
+        <h2>하위 카테고리 목록</h2><a href="{% url 'notes:ct2_manage_create' %}">(추가)</a><br>
+        --------------------------------<br>
+        {% for obj in ctgy2%}
+        {{obj.P_cate_name}} - {{obj.cate2_name}}
+        ( <a href="{% url 'notes:ct2_manage_edit' obj.id %}">수정</a>
+        <a href="{% url 'notes:ct2_manage_del' obj.id %}"> 삭제</a> )<br>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if delete1order %}
+        {% if message %}
+        {{message}}
+        {% endif %}
+        <div class="Delete">
+            정말로 삭제합니까? <br>
+            대상 카테고리 : {{ctgy.cate_name}}
+            <form action="" method="post"> {%csrf_token%}
+                <br><a href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
+                <input type="submit" value="삭제하기">
+            </form>
+        </div>
+    {% endif %}
+
+    {% if delete2order %}
+    {% if message %}
+    {{message}}
+    {% endif %}
+    <div class="Delete">
+        정말로 삭제합니까? <br>
+        대상 카테고리 : {{ctgy.cate2_name}}
+        <form action="" method="post"> {%csrf_token%}
+            <br><a href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
+            <input type="submit" value="삭제하기">
+        </form>
+    </div>
+{% endif %}
+
+    {% if list_view_page %}
     <div class="List">
         {% if ctgy_now %}
         <div class="Category_Now">
@@ -23,7 +72,7 @@
         {% endif %}
         </div>
         <br>
-        {% if note_list %}
+        {% if note_page_list %}
         <div class="Note_List">
             [해당 카테고리 글 목록]
             <br> 게시글은 한 페이지에 20개씩 표시됩니다.
@@ -34,5 +83,6 @@
         </div>
         {% endif %}
     </div>
+    {% endif %}
     {% endblock %}
 </div>
