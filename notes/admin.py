@@ -5,7 +5,7 @@ from .models import Category, Category2, Note
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['cate_name']
+    list_display = ['cate_name','created_by',]
     list_filter = ['cate_name',]
     search_field = ['cate_name',]
     search_help_text = '상위 카테고리 검색'
@@ -15,7 +15,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Category2)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['cate2_name', 'P_cate_name']
+    list_display = ['cate2_name', 'P_cate_name','created_by',]
     list_filter = ['P_cate_name']
     search_field = ['P_cate_name', 'cate2_name']
     search_help_text = '하위 카테고리 검색'

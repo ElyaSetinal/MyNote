@@ -1,4 +1,3 @@
-from turtle import title
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -84,13 +83,13 @@ def main_page(request): # 로그인 후 보여줄 메인페이지 : 작성된 �
     current_user = request.user
 
     note_list = Note.objects.filter(created_by = current_user).order_by('-created_at')
-    ctgy_list = Category.objects.all().order_by('id')
+    ctgy_list = Category.objects.filter(created_by = current_user).order_by('id')
 
     paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
     page_num = request.GET.get('page') # 페이지 번호 가져오기
     note_list_index = paging.get_page(page_num) # 페이지 인덱싱
     context = {
-        'note_list':note_list_index,
+        'note_page_list':note_list_index,
         'ctgy_list':ctgy_list,
         }
     return render(request, 'notes/main.html', context)
@@ -107,7 +106,7 @@ def Pcategory_page(request, cate_name): # 상위 카테고리 : 상위 카테고
     # print(current_category)
 
     note_list = Note.objects.filter(created_by = current_user).filter(categories__P_cate_name = current_category).order_by('-created_at')
-    ctgy2_list = Category2.objects.filter(P_cate_name = current_category).order_by('id')
+    ctgy2_list = Category2.objects.filter(created_by = current_user).filter(P_cate_name = current_category).order_by('id')
     # print(note_list)
     # print(ctgy2_list)
     paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
@@ -116,7 +115,7 @@ def Pcategory_page(request, cate_name): # 상위 카테고리 : 상위 카테고
 
     context = {
         'ctgy_now':current_category,
-        'note_list':note_list_index,
+        'note_page_list':note_list_index,
         'ctgy_list':ctgy2_list,
     }
 
@@ -139,7 +138,7 @@ def Scategory_page(request, cate2_name): # 하위 카테고리 : 하위 카테�
 
     context = {
         'ctgy_now':current_category,
-        'note_list':note_list_index,
+        'note_page_list':note_list_index,
     }
 
     return render(request, 'notes/category.html', context)
@@ -174,7 +173,6 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
             return redirect('notes:create_page')
         return redirect('notes:main_page')
 
-
 @login_required
 def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 링크
     # 데이터 유효성 검사 - 선택한 게시글 아이디 확인 및 읽어오기
@@ -188,7 +186,6 @@ def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 �
         'note':note,
         }
     return render(request, 'notes/detail.html', context)
-
 
 @login_required
 def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
@@ -302,6 +299,8 @@ def ctgr_delete(request, id): # 카테고리 삭제(22.05.12 추가)
     22.05.12/ main_page, category_page 구성, admin, url 수정
     22.05.12/ 카테고리 관리 페이지 별도 생성 구조 작성
     22.05.14/ 태그 기능 추가 구성, 외부 모듈 사용
+    22.05.15/ create, detail 기능 구현
+    22.05.16/ edit, delete, tag 기능 구현
 """
 
 """ 해야할 일

@@ -14,6 +14,8 @@ class Category(models.Model): # 상위 카테고리
 
     # 상위 카테고리 이름 지정
     cate_name = models.CharField(verbose_name='카테고리', max_length=10, unique=True)
+    # 카테고리 생성자 지정(22.05.16)
+    created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Cate1_Created_User', null=True, blank=True)
 
     def __str__(self): # 클래스의 정보를 name으로 호출하는 함수
         return f'{self.cate_name}'
@@ -27,6 +29,8 @@ class Category2(models.Model): # 하위 카테고리
     P_cate_name = models.ForeignKey(Category, verbose_name='상위 카테고리', on_delete=models.CASCADE, related_name='Cate2_Parents_name')
     # 하위 카테고리 이름 지정
     cate2_name = models.CharField(verbose_name='하위 카테고리', max_length=10, null=True, blank=True, unique=True)
+    # 카테고리 생성자 지정(22.05.16)
+    created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Cate2_Created_User', null=True, blank=True)
 
     def __str__(self): # 클래스의 정보를 name으로 호출하는 함수
         return f'{self.cate2_name}'
