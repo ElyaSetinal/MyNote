@@ -5,3 +5,5 @@ db.sqlite3
 manage.py
 /.vscode
 /UML
+notes/static_src/node_modules
+TailwindTutorial.html

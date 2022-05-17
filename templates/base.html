@@ -1,8 +1,11 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.min.css' %}"/>
     <title>{% block title %}{% endblock %} || MyNote</title>
+    {% tailwind_css %}
 </head>
 <body>
     <div>
