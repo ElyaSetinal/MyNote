@@ -1,27 +1,44 @@
 {% extends 'base.html' %}
 {% block title %} Category {% endblock %}</title>
 
-<div>
     {% block content %}
-    <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
+    <div description="Upper Bar" class="flex justify-around">
+        <span class="text-center">카테고리 화면입니다.</span>
+        <span class="lnline order-last">환영합니다! {{ request.user.username }}님!  
+            <a class="inline bg-green-200 rounded-md m-1 p-1" href="{% url 'logout' %}">로그아웃</a>
+        </span>
+    </div>
     <br>
     {% if category_manage_order %}
-    <div class="Management">
+    <div description="Management">
         <br>
-        <h2>상위 카테고리 목록</h2><a href="{% url 'notes:ct1_manage_create' %}">(추가)</a><br>
-        --------------------------------<br>
+        <span class="block text-center text-3xl bg-gray-200 p-2">
+            상위 카테고리 목록
+            <a class="inline bg-green-200 rounded-md text-xl" href="{% url 'notes:ct1_manage_create' %}">
+            추가</a><br>
+        </span>
+        <br>
         {% for obj in ctgy1%}
-        {{obj.cate_name}}
-        ( <a href="{% url 'notes:ct1_manage_edit' obj.id %}">수정</a>
-        <a href="{% url 'notes:ct1_manage_del' obj.id %}"> 삭제</a> )<br>
+            <span class="text-black m-1 p-1">{{obj.cate_name}}</span>
+            <a class="inline-block bg-green-800 rounded-md text-white" href="{% url 'notes:ct1_manage_edit' obj.id %}">
+                수정</a>
+            <a class="inline-block bg-green-800 rounded-md m-0.5 text-white" href="{% url 'notes:ct1_manage_del' obj.id %}"> 
+                삭제</a><br>
         {% endfor %}
         <br>
-        <h2>하위 카테고리 목록</h2><a href="{% url 'notes:ct2_manage_create' %}">(추가)</a><br>
-        --------------------------------<br>
+        <span class="block text-center text-3xl bg-gray-200 p-2">
+            하위 카테고리 목록
+            <a class="inline bg-green-200 rounded-md text-xl" href="{% url 'notes:ct2_manage_create' %}">
+            추가</a><br>
+        </span>
+        <br>
         {% for obj in ctgy2%}
-        {{obj.P_cate_name}} - {{obj.cate2_name}}
-        ( <a href="{% url 'notes:ct2_manage_edit' obj.id %}">수정</a>
-        <a href="{% url 'notes:ct2_manage_del' obj.id %}"> 삭제</a> )<br>
+            <span class="inline-block bg-green-800 text-xs rounded-md text-white m-1 p-1">{{obj.P_cate_name}}</span>
+            <span class="text-black">{{obj.cate2_name}}</span>
+            <a class="inline-block bg-green-800 rounded-md m-0.5 text-white" href="{% url 'notes:ct2_manage_edit' obj.id %}">
+                수정</a>
+            <a class="inline-block bg-green-800 rounded-md m-0.5 text-white" href="{% url 'notes:ct2_manage_del' obj.id %}"> 
+                삭제</a><br>
         {% endfor %}
     </div>
     {% endif %}
@@ -57,32 +74,42 @@
     {% if list_view_page %}
     <div class="List">
         {% if ctgy_now %}
-        <div class="Category_Now">
-                선택한 카테고리 : {{ctgy_now}}
-                <br><a href="javascript:window.history.back()">뒤로 돌아가기</a>
+        <div class="block  bg-gray-200">
+                <span class="inline-block rounded-md bg-gray-200 text-center text-xl ml-2 p-2"> 
+                    선택한 카테고리 :<br></span>
+                <span class="inline rounded-md text-white m-2 p-2 text-xl bg-blue-800">
+                    {{ctgy_now}}</span>
+                <a class="inline col-span-2 rounded-md text-white bg-green-800" href="javascript:window.history.back()">
+                    뒤로 돌아가기</a>
+                
         </div>
         {% endif %}
         <br>
         {% if ctgy_list %}
         <div class="Category2_List">
-            [카테고리 목록]
+            <span class="block text-center text-3xl bg-gray-200">[카테고리 목록]</span><br>
+            <div class="flex justify-evenly">
             {% for obj in ctgy_list %}
-                <li><a href="{% url 'notes:Scategory_page' obj.cate2_name %}">{{ obj.cate2_name }}</a></li>
+                <a class="text-sky-500 text-xl" href="{% url 'notes:Scategory_page' obj.cate2_name %}">
+                    {{ obj.cate2_name }}</a>
             {% endfor %}
+            </div>
         {% endif %}
         </div>
         <br>
         {% if note_page_list %}
         <div class="Note_List">
-            [해당 카테고리 글 목록]
-            <br> 게시글은 한 페이지에 20개씩 표시됩니다.
-            <br> 가장 최신글이 위에 표기됩니다.
+            <span class="block text-center text-3xl bg-gray-200">[해당 카테고리 글 목록]</span><br>
+            <section class="block text-red-500 text-center">
+                게시글은 한 페이지에 20개씩 표시됩니다.<br>
+                가장 최신글이 위에 표기됩니다.
+            </section>
             {% for object in note_page_list %}
-                <li><a href="{% url 'notes:detail_page' object.id %}">{{ object.title|truncatechars:10 }}</a> - {{ object.modified_at }}</li>
+                <li><a class="text-sky-500 text-2xl m-2" href="{% url 'notes:detail_page' object.id %}">{{ object.title|truncatechars:10 }}</a>
+                    <br>{{ object.modified_at }}</li><br>
             {% endfor %}
         </div>
         {% endif %}
     </div>
     {% endif %}
     {% endblock %}
-</div>

@@ -1,17 +1,23 @@
+{% load static %}
+{% load tailwind_tags %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>방문을 환영합니다. || MyNote</title>
+    {% tailwind_css %}
 </head>
-<body>
-    <div class="Notification">
-        방문을 환영합니다.<br>
-        로그인이 필요한 서비스로, 로그인을 해주세요.
-    </div>
-    <br>
-    <div class="UserLogin">
-        <a href="login">로그인하기</a>
+
+<body class="leading-normal tracking-normal">
+    <div description="Positioner" class="flex items-stretch h-screen justify-center">
+        <div description="Notification" class="self-center">
+            <br>
+            방문을 환영합니다.<br>
+            로그인이 필요한 서비스로, 로그인을 해주세요.<br>
+            <br>
+            <a description="UserLogin" class="block bg-green-800 rounded-full text-white m-1 p-1 self-center text-sky-500 text-xl text-center" href="login">
+                로그인하기</a>
+        </div>
     </div>
 </body>
 </html>
