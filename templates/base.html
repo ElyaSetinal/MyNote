@@ -9,39 +9,41 @@
     {% tailwind_css %}
 </head>
 
-<body class="">
-    <div class="m-2 p-2">
-        <span>
-            {% block content %}
-            {% endblock %}
-        </span>
-        {% if request.user.is_authenticated %}
-            {% if note_page_list %}
-            <span description="Pagination" class="block text-center">
-                {% if note_page_list.has_previous %}
-                    <a href="?page=1">First</a>
-                    <a href="?page={{note_list.previous_page_number}}">Previous</a>
-                {% endif %}
-
-                <span>{{ note_page_list.number }} of {{ note_page_list.paginator.num_pages }}</span>
-
-                {% if note_page_list.has_next %}
-                    <a href="?page={{ note_list.next_page_number }}">Next</a>
-                    <a href="?page={{ note_list.paginator.num_pages }}">Last</a>
-                {% endif %}
+<body>
+    <div class="">
+        <div class="relative w-full m-2 p-2">
+            <span>
+                {% block content %}
+                {% endblock %}
             </span>
+            {% if request.user.is_authenticated %}
+                {% if note_page_list %}
+                <span description="Pagination" class="block text-center">
+                    {% if note_page_list.has_previous %}
+                        <a href="?page=1">First</a>
+                        <a href="?page={{note_list.previous_page_number}}">Previous</a>
+                    {% endif %}
+
+                    <span>{{ note_page_list.number }} of {{ note_page_list.paginator.num_pages }}</span>
+
+                    {% if note_page_list.has_next %}
+                        <a href="?page={{ note_list.next_page_number }}">Next</a>
+                        <a href="?page={{ note_list.paginator.num_pages }}">Last</a>
+                    {% endif %}
+                </span>
+                {% endif %}
             {% endif %}
-        {% endif %}
-        <br>
-        {% if request.user.is_authenticated %}
-        <span class="grid grid-cols-4 justify-around">
+            <br>
+            {% if request.user.is_authenticated %}
+            <span class="grid grid-cols-4 justify-around">
                 <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:main_page' %}">홈</a>
                 <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:create_page' %}">글 쓰기</a>
                 <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:ct_manage_view' %}">카테고리 관리</a>
                 <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:tag_cloud' %}">태그 검색</a>
-        </span>
-        {% endif %}
-        <br>
+            </span>
+            {% endif %}
+            <br>
+        </div>
     </div>
 </body>
 </html>
