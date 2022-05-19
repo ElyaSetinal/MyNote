@@ -10,8 +10,30 @@
 </head>
 
 <body>
-    <div class="">
-        <div class="relative w-full m-2 p-2">
+    
+    <div class="flex flex-row">
+        {% if request.user.is_authenticated %}
+        <div class="sticky h-screen inset-y-0 left-1 w-52 ml-2 bg-gradient-to-b from-orange-200 to-blue-200">
+            <br><br>
+            <span class="block text-center text-3xl font-bold">
+                <a href="{% url 'notes:main_page' %}">My Note</a></span>
+                <span class="block text-center mt-4">
+                    <span class="text-sm"></span>
+                    <span class="text-lg font-bold">{{request.user.username}}</span>
+                    <a class="text-xs m-1 p-1" href="{% url 'logout' %}">로그아웃</a>
+                </span>
+            <br><br>
+
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:main_page' %}">홈</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:create_page' %}">글 쓰기</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:ct_manage_view' %}">카테고리 관리</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:tag_cloud' %}">태그 검색</a>
+            <br>
+            
+        </div>
+        {% endif %}
+
+        <div class="w-full ml-2 mr-2 p-2">
             <span>
                 {% block content %}
                 {% endblock %}
@@ -32,15 +54,6 @@
                     {% endif %}
                 </span>
                 {% endif %}
-            {% endif %}
-            <br>
-            {% if request.user.is_authenticated %}
-            <span class="grid grid-cols-4 justify-around">
-                <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:main_page' %}">홈</a>
-                <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:create_page' %}">글 쓰기</a>
-                <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:ct_manage_view' %}">카테고리 관리</a>
-                <a class="block bg-blue-800 rounded-md text-white m-1 p-1 text-white text-xl text-center" href="{% url 'notes:tag_cloud' %}">태그 검색</a>
-            </span>
             {% endif %}
             <br>
         </div>
