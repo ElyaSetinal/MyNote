@@ -1,41 +1,62 @@
+{% load static %}
+{% load tailwind_tags %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.min.css' %}"/>
     <title>{% block title %}{% endblock %} || MyNote</title>
+    {% tailwind_css %}
 </head>
+
 <body>
-    <div>
-        {% block content %}
-        {% endblock %}
-    </div>
+    
+    <div class="flex flex-row">
         {% if request.user.is_authenticated %}
-            {% if note_page_list %}
-            <div class="Pagination">
-                {% if note_page_list.has_previous %}
-                    <a href="?page=1">First</a>
-                    <a href="?page={{note_list.previous_page_number}}">Previous</a>
-                {% endif %}
+        <div class="sticky h-screen inset-y-0 left-1 w-52 ml-2 bg-gradient-to-b from-orange-200 to-blue-200">
+            <br><br>
+            <span class="block text-center text-3xl font-bold">
+                <a href="{% url 'notes:main_page' %}">My Note</a></span>
+                <span class="block text-center mt-4">
+                    <span class="text-sm"></span>
+                    <span class="text-lg font-bold">{{request.user.username}}</span>
+                    <a class="text-xs m-1 p-1" href="{% url 'logout' %}">로그아웃</a>
+                </span>
+            <br><br>
 
-                <span>{{ note_page_list.number }} of {{ note_page_list.paginator.num_pages }}</span>
-
-                {% if note_page_list.has_next %}
-                    <a href="?page={{ note_list.next_page_number }}">Next</a>
-                    <a href="?page={{ note_list.paginator.num_pages }}">Last</a>
-                {% endif %}
-            </div>
-            {% endif %}
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:main_page' %}">홈</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:create_page' %}">글 쓰기</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:ct_manage_view' %}">카테고리 관리</a>
+            <a class="block m-1 p-1 text-xl" href="{% url 'notes:tag_cloud' %}">태그 검색</a>
+            <br>
+            
+        </div>
         {% endif %}
-    <div>
-        {% if request.user.is_authenticated %}
-        <br>
+
+        <div class="w-full ml-2 mr-2 p-2">
             <span>
-            <li><a href="{% url 'notes:main_page' %}">홈</a></li>
-            <li><a href="{% url 'notes:create_page' %}">글 쓰기</a></li>
-            <li><a href="{% url 'notes:ct_manage_view' %}">카테고리 관리</a></li>
-            <li><a href="{% url 'notes:tag_cloud' %}">태그 검색</a></li>
+                {% block content %}
+                {% endblock %}
             </span>
-        {% endif %}
+            {% if request.user.is_authenticated %}
+                {% if note_page_list %}
+                <span description="Pagination" class="block text-center">
+                    {% if note_page_list.has_previous %}
+                        <a href="?page=1">First</a>
+                        <a href="?page={{note_list.previous_page_number}}">Previous</a>
+                    {% endif %}
+
+                    <span>{{ note_page_list.number }} of {{ note_page_list.paginator.num_pages }}</span>
+
+                    {% if note_page_list.has_next %}
+                        <a href="?page={{ note_list.next_page_number }}">Next</a>
+                        <a href="?page={{ note_list.paginator.num_pages }}">Last</a>
+                    {% endif %}
+                </span>
+                {% endif %}
+            {% endif %}
+            <br>
+        </div>
     </div>
 </body>
 </html>

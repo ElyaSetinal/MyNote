@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %}taggit_cloud.html{% endblock %}
+{% block title %}taggit_cloud{% endblock %}
 
 {% block content %}
-    <h1>Tag Cloud</h1>
+    <h1 class="block text-center text-2xl">Tag Cloud</h1>
     <br>
 
-    <div class="tag-cloud">
+    <div description="tag-cloud" class="">
         {% load taggit_templatetags2_tags %}
         {% get_tagcloud as tags %}
         {% for tag in tags %}
-            <a href="{% url 'notes:tagged_object_list' tag.name %}">{{tag.name}}({{tag.num_times}})</a>
+            <a href="{% url 'notes:tagged_object_list' tag.name %}">
+                <span class="inline-block bg-green-800 rounded-full text-white m-1 p-1">
+                    {{tag.name}}({{tag.num_times}})
+                </span>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}

@@ -6,42 +6,68 @@
     {% if message %}
         {{message}}
     {% endif %}
-    <br>
-    <h1>{{ note.title }}<br></h1>
-    카테고리 : {{ note.categories }}<br>
-    {% if not deleteorder%}
-        참고 링크 : {{ note.ref_link }}<br>
+
+    {% if deleteorder%}
+        <span class="text-red-500">삭제한 데이터는 복구할 수 없습니다.<br>
+        삭제를 진행할 게시글의 제목과 카테고리는 아래와 같습니다.</span>
     {% endif %}
-    작성자 : {{ note.created_by }}<br>
+
+    <h1 class="block text-3xl text-center m-2 p-2">{{ note.title }}<br></h1>
+    <div class="border-2 border-gray-500">
+        <div class="grid grid-cols-3">
+            <span class="inline p-1 md-2">카테고리 : 
+            <a class="inline bg-green-800 text-white text-xs rounded-md p-1" href="{% url 'notes:Scategory_page' note.categories %}">
+            {{ note.categories }}</a></span>
+            <br>
+            <span class="inline text-right p-1 mr-4">작성자 : {{ note.created_by }}</span>
+        </div>
+
+        {% if not deleteorder%}
+            <span class="p-1">참고 링크</span> :
+            <a class="text-blue-500 p-1" href="{{note.ref_link}}">{{ note.ref_link }}</a>
+        {% endif %}
+    </div>
     <br>
     {% if not deleteorder %}
-        <div>
-        <pre>
+        <div class="border-2 border-gray-500 p-4">
+            <pre>
 {{ note.contents }}
-        </pre><br> {# 노트의 본문 #}
+            </pre> {# 노트의 본문 #}
         </div>
-        태그
+        <br>
         <div>
-        {% for tag in note.tags.all %}
-        <a href="{% url 'notes:tagged_object_list' tag.name %}">{{ tag.name }}</a>
-        {% endfor %}
+        <span class="block md-2">태그</span>
+            {% for tag in note.tags.all %}
+                <a class="inline bg-green-800 text-white text-xs rounded-md p-1" href="{% url 'notes:tagged_object_list' tag.name %}">
+                {{ tag.name }}</a>
+            {% endfor %}
         </div>
         <br>
-        <br>
-
         작성시간 : {{ note.created_at }}<br>
         수정시간 : {{ note.modified_at }}<br>
         <br>
-        <br>
+        <div class="grid grid-cols-3 justify-items-stretch">
         {% if request.user == note.created_by %}
-            <a href="{% url 'notes:edit_page' note.id %}">수정하기</a>
-            <a href="{% url 'notes:delete_page' note.id %}">삭제하기</a>
+            <a class="inline bg-gray-400 text-black text-sm rounded-md mr-2 p-1 text-center" href="{% url 'notes:edit_page' note.id %}">
+                수정하기</a>
+            <a class="inline bg-gray-400 text-black text-sm rounded-md mr-2 p-1 order-last justify-self-end" href="{% url 'notes:delete_page' note.id %}">
+                삭제하기</a>
         {% endif %}
+        <a class="inline bg-gray-400 text-black text-sm rounded-md mr-2 p-1 text-center" href="javascript:window.history.back()">
+            돌아가기</a>
+        </div>
     {% endif %}
+
         {% if deleteorder %}
             <form action="" method="post"> {%csrf_token%}
-                <br><a href="{% url 'notes:detail_page' note.id %}">돌아가기</a>
-                <input type="submit" value="삭제하기">
+            <div class="grid grid-cols-2 justify-items-stretch">
+                <a class="inline bg-gray-400 text-black text-sm rounded-md p-1 order-last justify-self-end" href="{% url 'notes:detail_page' note.id %}">
+                    돌아가기</a>
+                <div class="inline bg-gray-400 text-black text-sm rounded-md p-1 justify-self-start">
+                    <input type="submit" value="삭제하기">
+                </div>
+            </div>
             </form>
         {% endif %}
+    <br>
 {% endblock %}

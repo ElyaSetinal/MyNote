@@ -1,27 +1,37 @@
 {% extends 'base.html' %}
-{% block title %}홈{% endblock %} || MyNote</title>
+{% block title %} Home {% endblock %} || MyNote</title>
 
-    <div>
         {% block content %}
-        <span>환영합니다! {{ request.user.username }}님!  <a href="{% url 'logout' %}">로그아웃</a></span>
-        <br>홈 화면입니다.
-        <br>
-        <br>
-        <div class="Category_List">
-            [카테고리 목록]
-            {% for object in ctgy_list %}
-            <li><a href="{% url 'notes:Pcategory_page' object.cate_name %}">{{ object.cate_name }}</a></li>
-            {% endfor %}
+        <div description="Upper Bar" class="flex justify-around">
+            <span class="block text-center text-xl font-bold"> Home </span>
+            </span>
         </div>
-            <br>
-        <div class="Note_List">
-            [전체글 목록]
-            <br> 게시글은 한 페이지에 20개씩 표시됩니다.
-            <br> 가장 최신글이 위에 표기됩니다.
-            {% for object in note_page_list %}
-            <li><a href="{% url 'notes:detail_page' object.id %}">{{ object.title|truncatechars:10 }}</a> - {{ object.modified_at }}</li>
+
+        <br>
+        <div description="Category List">
+            <span class="block text-center text-3xl bg-gray-200">[카테고리 목록]</span><br>
+            <div class="flex justify-evenly">
+            {% for object in ctgy_list %}
+            <a class="text-sky-500 text-xl" href="{% url 'notes:Pcategory_page' object.cate_name %}">{{ object.cate_name }}</a>
             {% endfor %}
+            </div>
+        </div>
+
+        <br><br>
+        
+        <div description="Note List">
+            <span class="block text-center text-3xl bg-gray-200">[전체글 목록]</span><br>
+            <section class="block text-red-500 text-center">
+                게시글은 한 페이지에 20개씩 표시됩니다.<br>
+                가장 최신글이 위에 표기됩니다.
+            </section>
+            <br>
+            <div class="">
+                {% for object in note_page_list %}
+                    <li><a class="text-sky-500 text-2xl m-2" href="{% url 'notes:detail_page' object.id %}">
+                        {{ object.title|truncatechars:10 }}</a><br>{{ object.created_at }}<br><br></li>
+                {% endfor %}
+            </div>
         </div>
         <br>
         {% endblock %}
-    </div>
