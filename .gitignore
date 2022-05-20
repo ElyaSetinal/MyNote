@@ -1,9 +1,23 @@
+### Django ###
+### Django Basic items ###
 /venv
 /config
-Design.txt
-db.sqlite3
 manage.py
+
+### Editor ###
+### Editor Basic items ###
 /.vscode
+
+### Custom Made ###
+### Memo, Graph, etc. items ###
+Design.txt
 /UML
+
+### DataBase ###
+db.sqlite3
+db.sqlite3_test
+
+### Package ###
+### Django packages added by users ###
 notes/static_src/node_modules
 TailwindTutorial.html

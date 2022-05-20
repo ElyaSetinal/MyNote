@@ -19,7 +19,7 @@
                 <a href="{% url 'notes:main_page' %}">My Note</a></span>
                 <span class="block text-center mt-4">
                     <span class="text-sm"></span>
-                    <span class="text-lg font-bold">{{request.user.username}}</span>
+                    <span class="text-lg font-bold">{{request.user.nickname}}</span>
                     <a class="text-xs m-1 p-1" href="{% url 'logout' %}">로그아웃</a>
                 </span>
             <br><br>
