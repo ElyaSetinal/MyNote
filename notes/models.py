@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from taggit.managers import TaggableManager
 
 #모델로써 제작 되어야 할 것들 : 노트본문, 카테고리 항목, 하위 카테고리 항목
 
 # 장고에서 제공하는 User Model 불러오기
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 class Category(models.Model): # 상위 카테고리
     class Meta: # 클래스의 이름을 지정
@@ -13,7 +13,7 @@ class Category(models.Model): # 상위 카테고리
         verbose_name_plural = '상위 카테고리'
 
     # 상위 카테고리 이름 지정
-    cate_name = models.CharField(verbose_name='카테고리', max_length=10, unique=True)
+    cate_name = models.CharField(verbose_name='카테고리', max_length=20, unique=True)
     # 카테고리 생성자 지정(22.05.16)
     created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Cate1_Created_User', null=True, blank=True)
 
@@ -28,7 +28,7 @@ class Category2(models.Model): # 하위 카테고리
     # 상위 카테고리 확인
     P_cate_name = models.ForeignKey(Category, verbose_name='상위 카테고리', on_delete=models.CASCADE, related_name='Cate2_Parents_name')
     # 하위 카테고리 이름 지정
-    cate2_name = models.CharField(verbose_name='하위 카테고리', max_length=10, null=True, blank=True, unique=True)
+    cate2_name = models.CharField(verbose_name='하위 카테고리', max_length=20, null=True, blank=True, unique=True)
     # 카테고리 생성자 지정(22.05.16)
     created_by = models.ForeignKey(to=User, verbose_name='작성자', on_delete=models.CASCADE, related_name='Cate2_Created_User', null=True, blank=True)
 
