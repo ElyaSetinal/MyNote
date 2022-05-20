@@ -1,8 +1,8 @@
 ### Django ###
 ### Django Basic items ###
 /venv
-/config
-manage.py
+sk.json
+__pycache__
 
 ### Editor ###
 ### Editor Basic items ###
