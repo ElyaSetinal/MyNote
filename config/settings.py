@@ -54,7 +54,6 @@ INSTALLED_APPS = [
 
     "notes",
     "users",
-    "accounts",
 
     "taggit.apps.TaggitAppConfig", #Taggit 사용하기 위해 추가
     "taggit_templatetags2", #Taggit 사용하기 위해 추가
@@ -160,6 +159,3 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 TAILWIND_CSS_PATH = 'css/dist/styles.css'
 
 AUTH_USER_MODEL = 'users.CustomUser'
-
-SESSION_COOKIE_AGE = 3600 # Session 관련 설정, 유지 시간, 초단위
-SESSION_SAVE_EVERY_REQUEST = True # Session 관련 설정, Request시 갱신

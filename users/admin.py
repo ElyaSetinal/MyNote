@@ -5,5 +5,5 @@ from .models import CustomUser
 @admin.register(CustomUser)
 class CustomUserModelAdmin(admin.ModelAdmin):
     list_display = ['identifier', 'nickname','date_joined','last_login']
-    readonly_fields= ['date_joined','last_login', 'password',]
+    readonly_fields= ['password',]
     pass
