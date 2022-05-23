@@ -45,12 +45,14 @@
         {% if message %}
         {{message}}
         {% endif %}
-        <div class="Delete">
+        <div description="Delete">
             정말로 삭제합니까? <br>
-            대상 카테고리 : {{ctgy.cate_name}}
+            대상 카테고리 : <span class="text-2xl">{{ctgy.cate_name}}</span>
             <form action="" method="post"> {%csrf_token%}
-                <br><a href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
-                <input type="submit" value="삭제하기">
+                <br><a class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2" href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
+                <div class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2">
+                    <input type="submit" value="삭제하기">
+                </div>
             </form>
         </div>
     {% endif %}
@@ -61,10 +63,12 @@
     {% endif %}
     <div class="Delete">
         정말로 삭제합니까? <br>
-        대상 카테고리 : {{ctgy.cate2_name}}
+        대상 카테고리 : <span class="text-2xl">{{ctgy.cate2_name}}</span>
         <form action="" method="post"> {%csrf_token%}
-            <br><a href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
-            <input type="submit" value="삭제하기">
+            <br><a class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2" href="{% url 'notes:ct_manage_view'%}">돌아가기</a>
+            <div class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2">
+                <input type="submit" value="삭제하기">
+            </div>
         </form>
     </div>
 {% endif %}

@@ -2,10 +2,19 @@
 {% block title %} Login {% endblock %}
 
 {% block content %}
-    <h1>로그인</h1>
+    <h1 class="block text-center text-2xl">로그인</h1><br>
     <form action="" method="POST"> {% csrf_token %}
-        <div>
+        <!-- <div>
             {{ form.as_ul }}
+        </div> -->
+        <div class="border-2 border-gray-200 rounded p-4 m-4 flex flex-col justify-center">
+            <div class="text-grey-darker text-sm font-bold m-8">
+            <span>{{ form.username.label }}</span><br>
+            <span>{{ form.username }}</span>
+            <br><br>
+            <span>{{ form.password.label}}</span><br>
+            <span>{{ form.password}}</span>
+            </div>
         </div>
         <br>
         <div class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2">

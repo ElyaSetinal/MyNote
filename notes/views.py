@@ -119,7 +119,10 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
     # 응답 - main-page로 redirect
     if request.method=='GET':
         form = NoteCreateForm()
-        context = {'forms':form, }
+        context = {
+            'forms':form,
+            'notepage':'notes'
+        }
         return render(request, 'notes/create.html', context)
     else:
         form = NoteCreateForm(request.POST)
@@ -162,11 +165,10 @@ def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
     target = get_object_or_404(Note, id=id, created_by=request.user)
     if request.method=='GET':
         forms = NoteEditForm(instance= target)
-        return render(request, 'notes/create.html', {'forms':forms})
+        return render(request, 'notes/create.html', {'forms':forms,'notepage':'on'})
     else:
         forms = NoteEditForm(request.POST)
         if forms.is_valid():
-            print(request.POST.get('categories'))
             new_categories = Category2.objects.get(id=request.POST["categories"])
             new_title = request.POST.get('title')
             new_contents = request.POST.get('contents')
@@ -249,7 +251,10 @@ def ctgr1_create(request): # 카테고리 생성(22.05.12 추가)
     # 응답 - main_page redirect
     if request.method=='GET':
         form = Ctgr1CreateForm()
-        context = {'forms':form, }
+        context = {
+            'forms':form,
+            'ctgypage':'1'
+            }
         return render(request, 'notes/create.html', context)
     else:
         form = Ctgr1CreateForm(request.POST)
@@ -272,7 +277,7 @@ def ctgr1_edit(request, id): # 카테고리 삭제(22.05.12 추가)
     target = get_object_or_404(Category, id=id, created_by=request.user)
     if request.method=='GET':
         forms = Ctgr1EditForm(instance= target)
-        return render(request, 'notes/create.html', {'forms':forms})
+        return render(request, 'notes/create.html', {'forms':forms,'ctgypage':'1'})
     else:
         forms = Ctgr1EditForm(request.POST)
         if forms.is_valid():
@@ -316,7 +321,10 @@ def ctgr2_create(request): # 카테고리 생성(22.05.12 추가)
     # 응답 - main_page redirect
     if request.method=='GET':
         form = Ctgr2CreateForm()
-        context = {'forms':form, }
+        context = {
+            'forms':form,
+            'ctgypage':'1'
+            }
         return render(request, 'notes/create.html', context)
     else:
         form = Ctgr2CreateForm(request.POST)
@@ -340,7 +348,7 @@ def ctgr2_edit(request, id): # 카테고리 삭제(22.05.12 추가)
     target = get_object_or_404(Category2, id=id, created_by=request.user)
     if request.method=='GET':
         forms = Ctgr2EditForm(instance= target)
-        return render(request, 'notes/create.html', {'forms':forms})
+        return render(request, 'notes/create.html', {'forms':forms, 'ctgypage':'1'})
     else:
         forms = Ctgr2EditForm(request.POST)
         if forms.is_valid():

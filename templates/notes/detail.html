@@ -19,7 +19,7 @@
             <a class="inline bg-green-800 text-white text-xs rounded-md p-1" href="{% url 'notes:Scategory_page' note.categories %}">
             {{ note.categories }}</a></span>
             <br>
-            <span class="inline text-right p-1 mr-4">작성자 : {{ note.created_by }}</span>
+            <span class="inline text-right p-1 mr-4">작성자 : {{ note.created_by.nickname }}</span>
         </div>
 
         {% if not deleteorder%}

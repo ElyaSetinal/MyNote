@@ -10,11 +10,13 @@
         {% load taggit_templatetags2_tags %}
         {% get_tagcloud as tags %}
         {% for tag in tags %}
+        {% if tag.num_times != 0 %}
             <a href="{% url 'notes:tagged_object_list' tag.name %}">
                 <span class="inline-block bg-green-800 rounded-full text-white m-1 p-1">
                     {{tag.name}}({{tag.num_times}})
                 </span>
             </a>
+        {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

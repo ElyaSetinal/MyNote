@@ -3,12 +3,37 @@
 
 {% block content %}
     <form action="" method="POST"> {% csrf_token %}
+        {# 사용되는 view : 글쓰기, 카테고리 생성 // if로 분리할 것 #}
+        {% if ctgypage %}
         <div>
             {{ forms.as_p }}
         </div>
+        {% endif %}
+
+        {% if notepage %}
+        <div class="border-2 border-gray-200 rounded-md p-4 m-4 flex">
+            <div class="text-grey-darker text-sm font-bold m-8">
+                <div class="">{{ forms.categories.label }}</div>
+                <div class="">{{ forms.categories }}</div>
+
+                <div class="">{{ forms.title.label }}</div>
+                <div class="">{{ forms.title }}</div>
+
+                <div class="">{{ forms.ref_link.label }}</div>
+                <div class="">{{ forms.ref_link }}</div>
+
+                <div class="">{{ forms.contents.label }}</div>
+                <div class="">{{ forms.contents }}</div>
+
+                <div class="">{{ forms.tags.label }}</div>
+                <div class="">{{ forms.tags }}</div>
+            </div>
+        </div>
+        {% endif %}
         <br>
-        <div class="inline-block bg-gray-500 rounded-md text-xl text-white m-2 p-2">
+        <div class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2">
         <input type="submit" value="작성">
         </div>
+        <a class="inline-block bg-gray-500 rounded-md text-white mt-4 p-2" href="{% url 'notes:main_page' %}">돌아가기</a>
     </form>
 {% endblock %}
