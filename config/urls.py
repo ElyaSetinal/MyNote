@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from notes.views import index, userlogin, userlogout
+from notes.views import index
 """
 통합페이지 구성
 1. 인덱스 페이지 : 뭐하는 페이지인지 간단한 설명, 로그인으로 넘어갈 수 있는 구조
@@ -28,8 +28,7 @@ from notes.views import index, userlogin, userlogout
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('login/', userlogin, name='login'),
-    path('logout/', userlogout, name='logout'),
     path('notes/', include('notes.urls', namespace = 'notes')),
+    path('accounts/', include('accounts.urls', namespace = 'accounts')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
