@@ -1,5 +1,6 @@
 # 운영, 배포 환경
 
+import os
 from .base import *
 
 # 로컬, 작업 환경
@@ -31,4 +32,4 @@ DATABASES = {
 }
 
 # STATICFILES_DIRS =[]
-STATIC_ROOT = ""
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
