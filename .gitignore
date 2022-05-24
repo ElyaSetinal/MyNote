@@ -21,3 +21,8 @@ db.sqlite3_test
 ### Django packages added by users ###
 notes/static_src/node_modules
 TailwindTutorial.html
+
+### env ###
+requirements.txt
+local.*
+development.*
