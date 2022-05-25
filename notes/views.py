@@ -354,8 +354,8 @@ def ctgr2_edit(request, id): # 카테고리 삭제(22.05.12 추가)
         if forms.is_valid():
             new_p_category = request.POST.get('P_cate_name')
             new_categories = request.POST.get('cate2_name')
-
-            target.P_cate_name = new_p_category
+            
+            target.P_cate_name.id = new_p_category
             target.cate2_name = new_categories
 
             target.save()
