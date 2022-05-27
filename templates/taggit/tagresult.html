@@ -6,13 +6,15 @@
             <span class="inline-block bg-green-800 text-2xl rounded-md text-white m-1 p-1">'{{ tagname }}'</span>
             <span class="text-xl rounded-md m-1 p-1">태그 검색 결과</span>
         </span>
-            
+            본인이 작성한 글만 표기됩니다.
     </div>
     <br>
     <div>
     {% for post in object_list %}
+    {% if post.created_by == request.user %}
         <li><a class="text-sky-500 text-2xl m-2" href="{% url 'notes:detail_page' post.id %}">
         {{post.title}}</a>{{ post.modified_at }}</li><br>
+    {% endif %}
     {% endfor %}
     </div>
 {% endblock %}
