@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+
 from taggit.managers import TaggableManager
 
 #모델로써 제작 되어야 할 것들 : 노트본문, 카테고리 항목, 하위 카테고리 항목

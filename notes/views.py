@@ -65,13 +65,10 @@ def Pcategory_page(request, cate_name): # 상위 카테고리 : 상위 카테고
     # 응답 - 작성한 게시글 및 하위 카테고리 표시
     current_user = request.user
     current_category = Category.objects.get(cate_name = cate_name)
-    # print(current_user)
-    # print(current_category)
 
     note_list = Note.objects.filter(created_by = current_user).filter(categories__P_cate_name = current_category).order_by('-created_at')
     ctgy2_list = Category2.objects.filter(created_by = current_user).filter(P_cate_name = current_category).order_by('id')
-    # print(note_list)
-    # print(ctgy2_list)
+
     paging = Paginator(note_list, 20) # 페이지 나누기 추가, (object_list, per_page)
     page_num = request.GET.get('page') # 페이지 번호 가져오기
     note_list_index = paging.get_page(page_num) # 페이지 인덱싱
@@ -146,9 +143,12 @@ def detail_page(request, id): # 개별글 보기 : 작성된 글 상세보기 �
     # 데이터 유효성 검사 - 선택한 게시글 아이디 확인 및 읽어오기
     # 비지니스 로직 - 해당 아이디의 카테고리, 제목, 본문, 참조링크, 태그등을 html에 전달
     # 응답 - 전달된 데이터로 render
+    user = request.user
     try:
         note = Note.objects.get(id=id)
     except Note.DoesNotExist:
+        return redirect('notes:main_page')
+    if user != note.created_by:
         return redirect('notes:main_page')
     context = {
         'note':note,
