@@ -134,6 +134,17 @@ def create_page(request): # 글 쓰기 : 새로운 글 쓰기
             f_tags = form.cleaned_data['tags']
             for f_tag in f_tags:
                 new_note.tags.add(f_tag)
+
+            """ Official Doc. Method
+            new_note = form.save(commit=False) # form을 구성하기, DB엔 저장하지 않음
+            new_note.categories = form.cleaned_data['categories']
+            new_note.title = form.cleaned_data['title']
+            new_note.contents = form.cleaned_data['contents']
+            new_note.ref_link = form.cleaned_data['ref_link']
+            new_note.created_by = request.user
+            new_note.save() # form에 적힌 내용을 저장하기
+            form.save_m2m() # Many to Many, 다대다 연결
+            """
         else:
             return redirect('notes:create_page')
         return redirect('notes:main_page')
@@ -162,6 +173,7 @@ def edit_page(request, id): # 개별글 수정 : 작성된 글 수정 링크
     # 데이터 유효성 검사 - 수정하는 게시글 내용 읽어오기
     # 비지니스 로직 - 신규 데이터를 해당되는 모델에 입력하고, 저장
     # 응답 - 해당되는 detail 페이지로 redirect
+    ## Tag 수정할때 변경되는 로직이 필요한데?
     target = get_object_or_404(Note, id=id, created_by=request.user)
     if request.method=='GET':
         forms = NoteEditForm(instance= target)
@@ -396,9 +408,4 @@ def ctgr2_delete(request, id): # 카테고리 삭제(22.05.12 추가)
     22.05.14/ 태그 기능 추가 구성, 외부 모듈 사용
     22.05.15/ create, detail 기능 구현
     22.05.16/ edit, delete, tag 기능 구현
-"""
-
-""" 해야할 일
-    탬플릿 구성
-    개별 코드 작성
 """
